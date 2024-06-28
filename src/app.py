@@ -103,12 +103,26 @@ def registrar_paciente():
 
 @app.route('/view')
 def view():
-    return render_template('view.html')
+    try:
+        cur = db.connection.cursor()
+        query = "SELECT * FROM patients"
+        cur.execute(query)
+        patients = cur.fetchall()
+        cur.close()
+        return render_template('view.html', patients=patients)
+    except Exception as e:
+        flash(f'Error al obtener los datos', 'danger')
+        return render_template('option')
 
+# @app.route('/search_patient', method=['GET', 'POST'])
+# def search_patient()
 
-@app.route('/update')
-def update():
-    return render_template('update.html')
+# @app.route('/update')
+# def update():
+#     try:
+#         cur = db.connection.cursor()
+#         query = "SELECT"
+#     return render_template('update.html')
 
 
 if __name__ == ('__main__'):
