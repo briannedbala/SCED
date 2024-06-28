@@ -3,12 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buscar paciente</title>
+    <title>Buscar Paciente</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #343a40;
+        }
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        label, input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+        }
+        input {
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    <h1>Buscar paciente</h1>
-    <form method="POST" action="{{ url_for('search_patient') }}"></form>
-        <input type="text" name="dni" placeholder="DNI del paciente" required>
+    <h1>Buscar Paciente</h1>
+    <form method="POST" action="{{ url_for('search_patient') }}">
+        <label for="dni">DNI del paciente</label>
+        <input type="text" id="dni" name="dni" placeholder="DNI del paciente" required>
         <button type="submit">Buscar</button>
+    </form>
 </body>
 </html>

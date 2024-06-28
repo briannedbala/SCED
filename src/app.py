@@ -6,11 +6,9 @@ app = Flask(__name__)
 
 db = MySQL(app)
 
-
 @app.route('/')
 def index():
     return render_template('index.html')
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -26,20 +24,19 @@ def login():
         cur.close()
 
         try:
-            # Vereficar en la base de datos
+            # Verificar en la base de datos
             if user:
-                # Inicio de sesion exitoso
-                flash('¡Inicio de sesion exitoso!', 'success')
-                return redirect(url_for('shop'))
+                # Inicio de sesión exitoso
+                flash('¡Inicio de sesión exitoso!', 'success')
+                return redirect(url_for('options'))
             else:
-                # Inicio de sesion fallido
+                # Inicio de sesión fallido
                 flash('No puede ingresar, intente nuevamente', 'danger')
                 return redirect(url_for('index'))
         except Exception as e:
             flash(str(e), 'danger')
 
     return render_template('login.html')
-
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -55,8 +52,7 @@ def register():
             # Insertar en la base de datos
             cur = db.connection.cursor()
             query = "INSERT INTO users (username, password, fullname, email, neighborhood) VALUES (%s, %s, %s, %s, %s)"
-            cur.execute(query, (username, password,
-                        fullname, email, neighborhood))
+            cur.execute(query, (username, password, fullname, email, neighborhood))
             db.connection.commit()
             cur.close()
             flash('¡Registro exitoso! Por favor, inicia sesión.', 'success')
@@ -67,11 +63,9 @@ def register():
 
     return render_template('register.html')
 
-
 @app.route('/options')
 def options():
     return render_template('options.html')
-
 
 @app.route('/register_patient', methods=['GET', 'POST'])
 def registrar_paciente():
@@ -88,8 +82,7 @@ def registrar_paciente():
         try:
             cur = db.connection.cursor()
             query = "INSERT INTO patients (fullname, age, dni, gender, neighborhood, street, grupo) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-            cur.execute(query, (fullname, age, dni, gender,
-                        neighborhood, street, grupo))
+            cur.execute(query, (fullname, age, dni, gender, neighborhood, street, grupo))
             db.connection.commit()
             cur.close()
             flash('Registro del paciente exitoso', 'success')
@@ -99,7 +92,6 @@ def registrar_paciente():
             db.connection.rollback()
 
     return render_template('registrar_paciente.html')
-
 
 @app.route('/view')
 def view():
@@ -111,13 +103,12 @@ def view():
         cur.close()
         return render_template('view.html', patients=patients)
     except Exception as e:
-        flash(f'Error al obtener los datos', 'danger')
+        flash(f'Error al obtener los datos de {e}', 'danger')
         return render_template('option')
-
 
 @app.route('/search_patient', methods=['GET', 'POST'])
 def search_patient():
-    if request.form == 'POST':
+    if request.method == 'POST':
         dni = request.form['dni']
 
         try:
@@ -131,22 +122,41 @@ def search_patient():
                 return render_template('update_patient.html', patient=patient)
             else:
                 flash('Paciente no encontrado', 'danger')
-                return redirect(url_for(search_patient))
+                return redirect(url_for('search_patient'))
         except Exception as e:
             flash(f'Error al buscar el paciente: {e}', 'danger')
             return redirect(url_for('index'))
 
     return render_template('search_patient.html')
 
+@app.route('/update_patient', methods=['POST'])
+def update_patient():
+    patient_id = request.form['patient_id']
+    fullname = request.form['fullname']
+    age = request.form['age']
+    dni = request.form['dni']
+    gender = request.form['gender']
+    neighborhood = request.form['neighborhood']
+    street = request.form['street']
+    grupo = request.form['grupo']
 
-# @app.route('/update')
-# def update():
-#     try:
-#         cur = db.connection.cursor()
-#         query = "SELECT"
-#     return render_template('update.html')
+    try:
+        cur = db.connection.cursor()
+        query = """
+            UPDATE patients
+            SET fullname = %s, age = %s, dni = %s, gender = %s, neighborhood = %s, street = %s, grupo = %s
+            WHERE id = %s
+        """
+        cur.execute(query, (fullname, age, dni, gender, neighborhood, street, grupo, patient_id))
+        db.connection.commit()
+        cur.close()
+        flash('Paciente actualizado exitosamente', 'success')
+        return redirect(url_for('options'))
+    except Exception as e:
+        flash(f'Error al actualizar el paciente: {e}', 'danger')
+        db.connection.rollback()
+        return redirect(url_for('search_patient'))
 
-
-if __name__ == ('__main__'):
+if __name__ == '__main__':
     app.config.from_object(config['development'])
     app.run()

@@ -51,9 +51,9 @@
     <div class="container">
         <h1>Gestión de Datos</h1>
         <div class="button-container">
-            <a onclick="window.location.href='/register_patient'" class="button">Registrar</a>
-            <a href="view.html" class="button">Visualizar</a>
-            <a href="actualizar.html" class="button">Actualizar</a>
+            <a href="{{ url_for('registrar_paciente') }}" class="button">Registrar</a>
+            <a href="{{ url_for('view') }}" class="button">Visualizar</a>
+            <a href="{{ url_for('search_patient') }}" class="button">Actualizar</a>
         </div>
     </div>
 </body>

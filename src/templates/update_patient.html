@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualizar Paciente</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #343a40;
+        }
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        label, input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+        }
+        input {
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Actualizar Paciente</h1>
+    <form method="POST" action="{{ url_for('update_patient') }}">
+        <input type="hidden" name="patient_id" value="{{ patient[0] }}">
+        
+        <label for="fullname">Nombre Completo</label>
+        <input type="text" id="fullname" name="fullname" value="{{ patient[1] }}" required>
+
+        <label for="age">Edad</label>
+        <input type="number" id="age" name="age" value="{{ patient[2] }}" required>
+
+        <label for="dni">DNI</label>
+        <input type="text" id="dni" name="dni" value="{{ patient[3] }}" required>
+
+        <label for="gender">Género</label>
+        <input type="text" id="gender" name="gender" value="{{ patient[4] }}" required>
+
+        <label for="neighborhood">Barrio</label>
+        <input type="text" id="neighborhood" name="neighborhood" value="{{ patient[5] }}" required>
+
+        <label for="street">Calle</label>
+        <input type="text" id="street" name="street" value="{{ patient[6] }}" required>
+
+        <label for="grupo">Grupo</label>
+        <input type="text" id="grupo" name="grupo" value="{{ patient[7] }}" required>
+
+        <button type="submit">Actualizar</button>
+    </form>
+</body>
+</html>
