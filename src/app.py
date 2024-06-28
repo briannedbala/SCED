@@ -73,8 +73,31 @@ def options():
     return render_template('options.html')
 
 
-@app.route('/add')
-def add():
+@app.route('/register_patient', methods=['GET', 'POST'])
+def registrar_paciente():
+    if request.method == 'POST':
+        fullname = request.form['fullname']
+        age = request.form['age']
+        dni = request.form['dni']
+        gender = request.form['gender']
+        neighborhood = request.form['neighborhood']
+        street = request.form['street']
+        grupo = request.form['grupo']
+        print(fullname, age, dni, gender, neighborhood, street, grupo)
+
+        try:
+            cur = db.connection.cursor()
+            query = "INSERT INTO patients (fullname, age, dni, gender, neighborhood, street, grupo) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+            cur.execute(query, (fullname, age, dni, gender,
+                        neighborhood, street, grupo))
+            db.connection.commit()
+            cur.close()
+            flash('Registro del paciente exitoso', 'success')
+            return redirect(url_for('login'))
+        except Exception as e:
+            flash(f'Error al registrar el paciente: {e}', 'danger')
+            db.connection.rollback()
+
     return render_template('registrar_paciente.html')
 
 
