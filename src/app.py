@@ -114,8 +114,30 @@ def view():
         flash(f'Error al obtener los datos', 'danger')
         return render_template('option')
 
-# @app.route('/search_patient', method=['GET', 'POST'])
-# def search_patient()
+
+@app.route('/search_patient', methods=['GET', 'POST'])
+def search_patient():
+    if request.form == 'POST':
+        dni = request.form['dni']
+
+        try:
+            cur = db.connection.cursor()
+            query = "SELECT * FROM patients WHERE dni = %s"
+            cur.execute(query, [dni])
+            patient = cur.fetchone()
+            cur.close()
+
+            if patient:
+                return render_template('update_patient.html', patient=patient)
+            else:
+                flash('Paciente no encontrado', 'danger')
+                return redirect(url_for(search_patient))
+        except Exception as e:
+            flash(f'Error al buscar el paciente: {e}', 'danger')
+            return redirect(url_for('index'))
+
+    return render_template('search_patient.html')
+
 
 # @app.route('/update')
 # def update():
